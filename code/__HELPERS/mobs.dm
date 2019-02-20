@@ -1,8 +1,8 @@
 /proc/random_blood_type()
-	return pick(4;"O-", 36;"O+", 3;"A-", 28;"A+", 1;"B-", 20;"B+", 1;"AB-", 5;"AB+")
+	return pickweight(list("O-" = 4, "O+" = 36, "A-" = 3, "A+" = 28, "B-" = 1, "B+" = 20, "AB-" = 1, "AB+" = 5))
 
 /proc/random_eye_color()
-	switch(pick(20;"brown",20;"hazel",20;"grey",15;"blue",15;"green",1;"amber",1;"albino"))
+	switch(pickweight(list("brown" = 20,"hazel" = 20,"grey" = 20,"blue" = 15,"green" = 15,"amber" = 1,"albino" = 1)))
 		if("brown")
 			return "630"
 		if("hazel")

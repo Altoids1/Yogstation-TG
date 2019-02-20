@@ -118,6 +118,7 @@
 #include "code\__DEFINES\~yogs_defines\logging.dm"
 #include "code\__DEFINES\~yogs_defines\mentor.dm"
 #include "code\__DEFINES\~yogs_defines\preferences.dm"
+#include "code\__DEFINES\~yogs_defines\rng.dm"
 #include "code\__DEFINES\~yogs_defines\shuttles.dm"
 #include "code\__DEFINES\~yogs_defines\spacepods.dm"
 #include "code\__DEFINES\~yogs_defines\wires.dm"
