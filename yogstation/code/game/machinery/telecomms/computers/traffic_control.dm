@@ -14,7 +14,7 @@
 	var/network = "NULL"		// the network to probe
 	var/temp = ""				// temporary feedback messages
 
-	var/storedcode = ""			// code stored
+	var/storedcode = "def process_signal(sign)\n{\n\treturn sign;\n}"			// code stored
 	var/obj/item/card/id/auth = null
 	var/list/access_log = list()
 	var/process = 0
