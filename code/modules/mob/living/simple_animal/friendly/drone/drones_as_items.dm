@@ -62,4 +62,6 @@
 		D.equip_to_slot_or_del(new_hat, SLOT_HEAD)
 	D.flags_1 |= (flags_1 & ADMIN_SPAWNED_1)
 	D.key = user.key
+	var/nickname = (D.gender == FEMALE ? capitalize(pick(GLOB.first_names_female)) : capitalize(pick(GLOB.first_names_male))) //Yogs -- Gives drones unique names
+	D.name = "[name] ([nickname])" //Yogs
 	qdel(src)
