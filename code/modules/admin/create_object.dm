@@ -7,7 +7,7 @@
 	var/static/create_object_html = null
 	if (!create_object_html)
 		var/objectjs = null
-		objectjs = jointext(typesof(/obj), ";")
+		objectjs = jointext(sortedtypesof(/obj), ";")//Yogs -- sortedtypesof
 		create_object_html = file2text('html/create_object.html')
 		create_object_html = replacetext(create_object_html, "null /* object types */", "\"[objectjs]\"")
 
@@ -23,7 +23,7 @@
 	var/html_form = create_object_forms[path]
 
 	if (!html_form)
-		var/objectjs = jointext(typesof(path), ";")
+		var/objectjs = jointext(sortedtypesof(path), ";")//Yogs -- sortedtypesof
 		html_form = file2text('html/create_object.html')
 		html_form = replacetext(html_form, "Create Object", "Create [path]")
 		html_form = replacetext(html_form, "null /* object types */", "\"[objectjs]\"")
