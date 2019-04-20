@@ -678,6 +678,12 @@
 			obj_integrity = max_integrity
 			if (opened==APC_COVER_REMOVED)
 				opened = APC_COVER_OPENED
+			//yogs start -- Resets the wirestate of the APC when fully replaced like this
+			wires = new /datum/wires/apc(src)
+			shorted = initial(shorted)
+			aidisabled = initial(aidisabled)
+			locked = initial(locked)
+			//yogs end
 			update_icon()
 	else if(istype(W, /obj/item/clockwork/integration_cog) && is_servant_of_ratvar(user))
 		if(integration_cog)
