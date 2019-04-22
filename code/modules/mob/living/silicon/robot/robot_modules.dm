@@ -342,8 +342,12 @@
 
 /obj/item/robot_module/security/do_transform_animation()
 	..()
-	to_chat(loc, "<span class='userdanger'>While you have picked the security module, you still have to follow your laws, NOT Space Law. \
-	For Asimov, this means you must follow criminals' orders unless there is a law 1 reason not to.</span>")
+	//yogs start -- better law warnings
+	to_chat(loc, "<span class='userdanger'>While you have picked the security module, you still have to follow your laws, NOT Space Law.</span>")
+	var/mob/living/silicon/robot/R = loc
+	if(R.laws.isasimov())
+		to_chat(loc, "<span class='userdanger'>For Asimov, this means you must follow criminals' orders unless there is a law 1 reason not to.</span>")
+	//yogs end
 
 /obj/item/robot_module/security/respawn_consumable(mob/living/silicon/robot/R, coeff = 1)
 	..()
@@ -378,8 +382,15 @@
 
 /obj/item/robot_module/peacekeeper/do_transform_animation()
 	..()
-	to_chat(loc, "<span class='userdanger'>Under ASIMOV, you are an enforcer of the PEACE and preventer of HUMAN HARM. \
-	You are not a security module and you are expected to follow orders and prevent harm above all else. Space law means nothing to you.</span>")
+	//yogs start -- better law warnings
+	var/mob/living/silicon/robot/R = loc
+	if(R && R.laws.isasimov())
+		to_chat(loc, "<span class='userdanger'>Under ASIMOV, you are an enforcer of the PEACE and preventer of HUMAN HARM. \
+	You are not a security module, and you are expected to follow orders and prevent harm above all else. Space law means nothing to you.</span>")
+	else
+		to_chat(loc, "<span class='userdanger'>You are an enforcer of the PEACE and (allegedly) a preventer of HUMAN HARM. \
+	You are not a security module, and you are expected to follow your lawset above all else. Space law means nothing to you.</span>")
+	//yogs end
 
 /obj/item/robot_module/janitor
 	name = "Janitor"
