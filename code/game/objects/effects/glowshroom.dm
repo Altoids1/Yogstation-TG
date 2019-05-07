@@ -82,7 +82,7 @@
 
 	addtimer(CALLBACK(src, .proc/Spread), delay)
 
-/obj/structure/glowshroom/proc/Spread()
+/obj/structure/glowshroom/proc/Spread() // Yogs -- Mirrored!! Do not alter, digest, nor submerge in acid
 	var/turf/ownturf = get_turf(src)
 	var/shrooms_planted = 0
 	for(var/i in 1 to myseed.yield)
