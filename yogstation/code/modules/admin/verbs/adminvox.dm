@@ -53,3 +53,16 @@
 		z_level = src.mob.loc.z // Play it on their mob's z-level
 	for(var/word in words) // The forloop that actually plays the sounds, hopefully
 		play_vox_word(word, z_level, null, voxType)
+
+/client/proc/admin_mutevox()
+	set category = "Admin"
+	set name = "Silence AI Vox"
+	set desc = "Halts all currently running AI Vox, for everyone."
+	
+	if(alert("Are you sure you want to halt the currently-running AI Vox message?",,"Yes","No") != "Yes")
+		return
+	
+	GLOB.cancel_vox = TRUE
+	
+	log_admin("[key_name(src)] has halted all currently-running AI Vox messages.")
+	message_admins("[key_name(src)] has halted all currently-running AI Vox messages.")

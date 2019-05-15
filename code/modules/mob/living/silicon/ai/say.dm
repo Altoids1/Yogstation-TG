@@ -137,7 +137,12 @@
 	log_game("[key_name(src)] made a vocal announcement with the following message: [message].")
 
 	for(var/word in words)
-		play_vox_word(word, src.z, null, voxType) //yogs - male vox
+		//yogs start -- male vox and vox muting
+		if(GLOB.cancel_vox)
+			GLOB.cancel_vox = FALSE
+			break
+		play_vox_word(word, src.z, null, voxType)
+		//yogs end
 
 
 /proc/play_vox_word(word, z_level, mob/only_listener, voxType = "female")
