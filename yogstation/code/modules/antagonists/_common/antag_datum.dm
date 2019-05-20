@@ -4,7 +4,7 @@
 	for(var/datum/objective/O in objectives)
 		log_game("[O.explanation_text]")
 		
-/datum/antagonist/shadowling/on_gain()
+/datum/antagonist/vampire/on_gain()
 	SSticker.mode.update_vampire_icons_added(owner)
 
 /datum/antagonist/vampire/on_removal()
