@@ -3,6 +3,7 @@
 
 /* --- Traffic Control Scripting Language --- */
 	// Nanotrasen TCS Language - Made by Doohl, ported to Yogs by Altoids
+#define NTSL_VERSION_NUMBER 3 // Increment when you make a change that breaks old scripts.
 
 #define HUMAN 1
 #define MONKEY 2
@@ -21,7 +22,58 @@ GLOBAL_LIST_INIT(allowed_custom_spans,list(SPAN_ROBOT,SPAN_YELL,SPAN_ITALICS,SPA
 	GC()
 		..()
 		Compiler = null
+/n_Interpreter/TCS_Interpreter/proc/InitVars() // Initializes the initial variables
+	SetVar("PI"		, 	3.141592653)	// value of pi
+	SetVar("E" 		, 	2.718281828)	// value of e
+	SetVar("SQURT2" , 	1.414213562)	// value of the square root of 2
+	SetVar("FALSE"  , 	0)				// boolean shortcut to 0
+	SetVar("false"  , 	0)				// boolean shortcut to 0
+	SetVar("TRUE"	,	1)				// boolean shortcut to 1
+	SetVar("true"	,	1)				// boolean shortcut to 1
 
+	SetVar("NORTH" 	, 	NORTH)			// NORTH (1)
+	SetVar("SOUTH" 	, 	SOUTH)			// SOUTH (2)
+	SetVar("EAST" 	, 	EAST)			// EAST  (4)
+	SetVar("WEST" 	, 	WEST)			// WEST  (8)
+
+	// Channel macros
+	SetVar("$common",	1459)
+	SetVar("$science",	1351)
+	SetVar("$command",	1353)
+	SetVar("$medical",	1355)
+	SetVar("$engineering",1357)
+	SetVar("$security",	1359)
+	SetVar("$supply",	1347)
+	SetVar("$service",	1349)
+	SetVar("$centcom",	1337) // Yes, that is the real Centcom freq.
+	//This whole game is a big fuckin' meme.
+	SetVar("$aiprivate", 1447) // The Common Server is the one...
+	// ...that handles the AI Private Channel, btw.
+	
+	//Current allowed span classes
+	SetVar("$robot",	SPAN_ROBOT) //The font used by silicons!
+	SetVar("$loud",		SPAN_YELL)	//Bolding, applied when ending a message with several exclamation marks.
+	SetVar("$emphasis",	SPAN_ITALICS) //Italics
+	SetVar("$wacky",	SPAN_SANS) //Comic sans font, normally seen from the genetics power.
+	SetVar("$commanding",	SPAN_COMMAND) //Bolding from high-volume mode on command headsets
+
+	//Language bitflags
+	/* (Following comment written 26 Jan 2019)
+	So, language doesn't work with bitflags anymore
+	But having them be bitflags inside of NTSL makes more sense in its context
+	So, when we get the signal back from NTSL, if the language has been altered, we'll set it to a new language datum,
+	based on the bitflag the guy used.
+	
+	However, I think the signal can only have one language
+	So, the lowest bit set within $language overrides any higher ones that are set.
+	*/
+	SetVar("HUMAN"   ,	HUMAN)
+	SetVar("MONKEY"   ,	MONKEY)
+	SetVar("ALIEN"   ,	ALIEN)
+	SetVar("ROBOT"   ,	ROBOT)
+	SetVar("SLIME"   ,	SLIME)
+	SetVar("DRONE"   ,	DRONE)
+	
 
 /datum/TCS_Compiler
 	var/n_Interpreter/TCS_Interpreter/interpreter
@@ -58,75 +110,20 @@ GLOBAL_LIST_INIT(allowed_custom_spans,list(SPAN_ROBOT,SPAN_YELL,SPAN_ITALICS,SPA
 	interpreter.Compiler= src
 	interpreter.container = src
 
-	interpreter.SetVar("PI"		, 	3.141592653)	// value of pi
-	interpreter.SetVar("E" 		, 	2.718281828)	// value of e
-	interpreter.SetVar("SQURT2" , 	1.414213562)	// value of the square root of 2
-	interpreter.SetVar("FALSE"  , 	0)				// boolean shortcut to 0
-	interpreter.SetVar("false"  , 	0)				// boolean shortcut to 0
-	interpreter.SetVar("TRUE"	,	1)				// boolean shortcut to 1
-	interpreter.SetVar("true"	,	1)				// boolean shortcut to 1
+	interpreter.InitVars()
 
-	interpreter.SetVar("NORTH" 	, 	NORTH)			// NORTH (1)
-	interpreter.SetVar("SOUTH" 	, 	SOUTH)			// SOUTH (2)
-	interpreter.SetVar("EAST" 	, 	EAST)			// EAST  (4)
-	interpreter.SetVar("WEST" 	, 	WEST)			// WEST  (8)
-
-	// Channel macros
-	interpreter.SetVar("channels", new /datum/n_enum(list(
-		"common" = 1459,
-		"science" = 1351,
-		"command" = 1353,
-		"medical" = 1355,
-		"engineering" = 1357,
-		"security" = 1359,
-		"supply" = 1347,
-		"service" = 1349,
-		"centcom" = 1337,// Yes, that is the real Centcom freq.
-		//This whole game is a big fuckin' meme.
-		"aiprivate" = 1447 // The Common Server is the one...
-		// ...that handles the AI Private Channel, btw.
-	)))
-
-
-	interpreter.SetVar("filter_types", new /datum/n_enum(list(
-		"robot" = SPAN_ROBOT,
-		"loud" = SPAN_YELL,
-		"emphasis" = SPAN_ITALICS,
-		"wacky" = SPAN_SANS,
-		"commanding" = SPAN_COMMAND
-	)))
-	//Current allowed span classes
-
-	//Language bitflags
-	/* (Following comment written 26 Jan 2019)
-	So, language doesn't work with bitflags anymore
-	But having them be bitflags inside of NTSL makes more sense in its context
-	So, when we get the signal back from NTSL, if the language has been altered, we'll set it to a new language datum,
-	based on the bitflag the guy used.
-
-	However, I think the signal can only have one language
-	So, the lowest bit set within $language overrides any higher ones that are set.
-	*/
-	interpreter.SetVar("languages", new /datum/n_enum(list(
-		"human" = HUMAN,
-		"monkey" = MONKEY,
-		"alien" = ALIEN,
-		"robot" = ROBOT,
-		"slime" = SLIME,
-		"drone" = DRONE
-	)))
-
-	interpreter.Run() // run the thing
+	if(interpreter.ProcExists("Boot")) // If there's a boot proc
+		interpreter.CallProc("Boot", list(NTSL_VERSION_NUMBER))// Run it!
+	//The above is supposed to act as a replacement & inversion of process_signal()
 
 	if(Holder)
 		Holder.compile_warnings = parser.warnings || list()
-		if(!interpreter.ProcExists("process_signal")) // yell at the user if they need to update their scripts
+		if(interpreter.ProcExists("process_signal")) // yell at the user if they need to update their scripts
 			Holder.compile_warnings += new /scriptError/OutdatedScript()
 
 	return returnerrors
 
-	/* -- Execute the compiled code -- */
-
+/* -- Execute the compiled code -- */
 /datum/TCS_Compiler/proc/Run(datum/signal/subspace/vocal/signal) // Runs the already-compiled code on an incoming signal.
 
 	if(!ready)
@@ -135,8 +132,7 @@ GLOBAL_LIST_INIT(allowed_custom_spans,list(SPAN_ROBOT,SPAN_YELL,SPAN_ITALICS,SPA
 	if(!interpreter)
 		return
 
-	if(!interpreter.ProcExists("process_signal"))
-		return
+	interpreter.InitVars()
 
 	var/datum/language/oldlang = signal.language
 	if(oldlang == /datum/language/common)
@@ -153,7 +149,7 @@ GLOBAL_LIST_INIT(allowed_custom_spans,list(SPAN_ROBOT,SPAN_YELL,SPAN_ITALICS,SPA
 		oldlang = DRONE
 
 	// Signal data
-
+	
 	var/datum/n_struct/signal/script_signal = new(list(
 		"content" = html_decode(signal.data["message"]),
 		"freq" = signal.frequency,
@@ -169,9 +165,10 @@ GLOBAL_LIST_INIT(allowed_custom_spans,list(SPAN_ROBOT,SPAN_YELL,SPAN_ITALICS,SPA
 		"yell" = signal.virt.verb_yell,
 		"exclaim" = signal.virt.verb_exclaim
 	))
+	interpreter.SetVar("signal", script_signal)
+	interpreter.Run() // Run the thing
 
-	// Run the compiled code
-	script_signal = interpreter.CallProc("process_signal", list(script_signal))
+	script_signal = interpreter.GetVar("signal") // We'll do the sanitization on a per-element basis, okay?
 	if(!istype(script_signal))
 		signal.data["reject"] = 1
 		return
