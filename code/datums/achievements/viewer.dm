@@ -19,17 +19,26 @@
 		ui.open()
 
 /datum/achievement_browser/ui_data(mob/user)
-	var/data = list("achievements" = list())
+	var/data = list("categories" = list())
 	var/list/achievements = get_achievements(user.client)
+	
+	var/list/temp_categories = list()
 	for(var/B in achievements)
 		var/datum/achievement/achievement = B
+		if(!achievement.hidden || achievements[achievement]) // If we don't have to display this achievement
+			continue // then don't even send it to their GUI then	
 		var/list/A = list(
 			"name" = achievement.name,
 			"unlocked" = achievements[achievement],
-			"desc" = (!achievement.hidden || achievements[achievement]) ? achievement.desc : "???"
+			"desc" = achievement.desc,
 		)
-		data["achievements"] += list(A)
+		if(!temp_categories[achievement.category])
+			temp_categories[achievement.category] = list()
+		temp_categories[achievement.category] += list(A) // Has to be made into a list so that A's elements aren't just added in elementwise
 	
+	for(var/C in temp_categories)
+		data["categories"] = list("category_name" = C, "achievements" = temp_categories[C])
+		
 	return data
 
 /client/verb/checkachievements()

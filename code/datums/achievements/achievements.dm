@@ -10,6 +10,7 @@
 	var/desc = "Please make an issue on github, including this achievement's name and how you got it."
 	var/id = 0 //Should be incremented so every achievement has a unique ID
 	var/hidden = FALSE // Whether or not this achievement's description is hidden untill you accomplish this (doesn't apply to the online viewer)
+	var/category = "Generic" // Which category this achievement is listed under, in the achievement viewer GUI thing 
 
 /datum/achievement/bubblegum
 	name = "Kick Ass and Chew Bubblegum"
@@ -156,6 +157,7 @@
 	name = "Green Text"
 	desc = "As an antagonist, achieve your first green text"
 	id = GREENTEXT + 1
+	category = "Antagonist"
 
 /datum/achievement/greentext/ratvar
 	name = "Clock Work"
@@ -244,6 +246,7 @@
 	name = "Mission Failed, We'll Get'em Next Time"
 	desc = "As an antagonist, fail your objectives."
 	id = REDTEXT + 1
+	category = "Antagonist"
 
 /datum/achievement/redtext/winlost
 	name = "Arcane Failure"
@@ -257,6 +260,8 @@
 	name = "Isaac Clarke"
 	desc = "Survive a full round as part of the Engineering team."
 	id = ENGIEDEPT + 1
+	category = "Engineering"
+
 /datum/achievement/engineering/solar
 	name = "Honest Work"
 	desc = "Set up one of the solar arrays as part of the Engineering team."
