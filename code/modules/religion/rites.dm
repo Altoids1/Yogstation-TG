@@ -124,7 +124,7 @@
 	name = "Gonna look like it"
 	desc = "From rags to riches? Better get rid of the rags then!"
 	ritual_length = 0.5 MINUTES
-	invoke_msg = "Please, all i want are some nice clothes..."
+	invoke_msg = "Please, all I want are some nice clothes..."
 	favor_cost = 100
 
 /datum/religion_rites/looks/invoke_effect(atom/religious_tool, mob/user)

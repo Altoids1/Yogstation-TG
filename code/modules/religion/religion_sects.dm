@@ -101,10 +101,14 @@
 		SEND_SIGNAL(H, COMSIG_ADD_MOOD_EVENT, "blessing", /datum/mood_event/blessing)
 	return FALSE
 
+/* PURITANISM */
+
 /datum/religion_sect/puritanism
 	name = "Puritanism (Default)"
 	desc = "Nothing special."
 	convert_opener = "Your run-of-the-mill sect, there are no benefits or boons associated. Praise normalcy!"
+	
+/* TECHNOPHILE */
 
 /datum/religion_sect/technophile
 	name = "Technophile"
@@ -176,6 +180,7 @@
 	qdel(I)
 	return TRUE
 /*
+ * CAPITALISM
  * A religious sect based around giving money for favor which can be used to get a cool suit and become a golem. 
  */
 /datum/religion_sect/capitalists
@@ -187,6 +192,7 @@
 	max_favor = 100000
 	rites_list = list(/datum/religion_rites/toppercent,
 					  /datum/religion_rites/looks)
+	var/bless_money_minimum = 500 // How much money you need in your bank account to be blessable by the invisible hand of the market
 
 /datum/religion_sect/capitalists/sect_bless(mob/living/L, mob/living/user)
 	if(!ishuman(L))
@@ -194,9 +200,8 @@
 	var/mob/living/carbon/human/H = L
 	var/obj/item/card/id/id_card = H.get_idcard()
 	var/obj/item/card/id/id_cardu = user.get_idcard()
-	var/money_check = 500
-
-	if(!id_card.registered_account.account_balance > money_check)
+	
+	if(!id_card.registered_account.account_balance > bless_money_minimum)
 		user.visible_message("<span class='notice'>[H] is too poor to recieve [GLOB.deity]'s blessing!</span>")
 	else
 		var/heal_amt = 10
@@ -234,6 +239,6 @@
 	if(!istype(money))
 		return
 	adjust_favor(round(money.credits), L)
-	to_chat(L, "<span class='notice'>As you insert the chip into the small slit in the altar, you feel [GLOB.deity] looking at you with gratitude. Seems being a God isnt that easy on your wallet.</span>")
+	to_chat(L, "<span class='notice'>As you insert the chip into the small slit in the altar, you feel [GLOB.deity] looking at you with gratitude. Seems being a God isn't that easy on your wallet.</span>")
 	qdel(I)
 	return TRUE
