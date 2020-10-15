@@ -5,6 +5,7 @@
 	var/list/ritual_invocations // list of invocations said (strings) throughout the rite
 	var/invoke_msg // message when you invoke
 	var/favor_cost = 0
+	var/list/affecting // List of people on holy turfs, if relevant or necessary
 
 /datum/religion_rites/New()
 	. = ..()
@@ -53,6 +54,21 @@
 /datum/religion_rites/proc/invoke_effect(mob/living/user, atom/religious_tool)
 	GLOB.religious_sect.on_riteuse(user,religious_tool)
 	return TRUE
+
+/datum/religion_rites/proc/register_holy_turf(turf/simulated/floor/F, datum/religion/R)
+	RegisterSignal(F, list(COMSIG_ATOM_ENTERED), .proc/holy_turf_enter)
+	RegisterSignal(F, list(COMSIG_ATOM_EXITED), .proc/holy_turf_exit)
+
+/datum/religion_rites/proc/holy_turf_enter(datum/source, atom/movable/mover, atom/oldLoc)
+	LAZYADD(affecting, mover)
+
+/datum/religion_rites/proc/unregister_holy_turf(turf/simulated/floor/F, datum/religion/R)
+	UnregisterSignal(F, list(COMSIG_ATOM_ENTERED, COMSIG_ATOM_EXITED))
+	for(var/atom/movable/AM in affecting)
+		holy_turf_exit(F, AM)
+
+/datum/religion_rites/proc/holy_turf_exit(datum/source, atom/movable/mover, atom/newLoc)
+	LAZYREMOVE(affecting, mover)
 
 
 /*********Technophiles**********/
